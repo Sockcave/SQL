@@ -27,3 +27,43 @@ HAVING total_calories > 150;
 -- Example: Query exercises logged at least twice.
 SELECT type FROM exercise_logs GROUP BY type 
 HAVING COUNT(*) >= 2;
+
+-- Heartrate Examples
+-- Max heartrate = (220- age)
+-- Target heartrate zone = (50%-90% of max)
+
+-- At age 30, what is the max heart rate?
+SELECT COUNT(*) FROM exercise_logs WHERE heart_rate > (220-30);
+
+-- Are heartrate logs in target zone?
+SELECT COUNT(*) FROM exercise_logs WHERE 
+heart_rate >= ROUND(0.5*(220-30))
+AND 
+heart_rate <= ROUND(0.9*(220-30));
+
+-- CASE
+
+-- Example: We want a column that signifies if each log hits the target.
+SELECT type, heart_rate, 
+    CASE 
+        WHEN heart_rate > 220-30 THEN 'above max'
+        WHEN heart_rate > ROUND(0.90*(220-30))
+            THEN 'above target'
+        WHEN heart_rate > ROUND(0.50*(220-30))
+            THEN 'within target'
+        ELSE 'below target'
+    END AS 'hr_zone'
+    FROM exercise_logs;
+
+-- Example: Count up each 'hr_zone' case
+SELECT COUNT(*), 
+    CASE 
+        WHEN heart_rate > 220-30 THEN 'above max' 
+        WHEN heart_rate > ROUND(0.90*(220-30)) 
+            THEN 'above target'
+        WHEN heart_rate > ROUND(0.50*(220-30))
+            THEN 'within target'
+        ELSE 'below target'
+    END AS 'hr_zone'
+    FROM exercise_logs
+GROUP BY hr_zone;
