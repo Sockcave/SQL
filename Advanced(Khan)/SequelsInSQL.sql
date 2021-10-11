@@ -24,3 +24,10 @@ INSERT INTO movies
 SELECT movies.title, sequels.title AS sequel_title FROM movies 
 LEFT OUTER JOIN movies sequels 
 ON movies.sequel_id = sequels.id;
+
+-- Same problem but using JOIN instead of LEFT OUTER JOIN
+SELECT movies.title, sequels.title AS sequel_title FROM movies 
+JOIN movies sequels 
+ON movies.sequel_id = sequels.id;
+
+-- Harry Potter and the Deathly Hallows Part 2 is NOT included because we did not use LEFT OUTER JOIN.
